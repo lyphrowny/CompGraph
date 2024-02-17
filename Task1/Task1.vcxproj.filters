@@ -22,9 +22,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Task1.fx">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Task1_PS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>

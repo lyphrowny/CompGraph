@@ -7,6 +7,7 @@
 #include <string>
 
 using namespace DirectX;
+#define MAX_LOADSTRING 300
 
 //--------------------------------------------------------------------------------------
 // Structures
@@ -69,8 +70,19 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     if (FAILED(InitWindow(hInstance, nCmdShow)))
         return 0;
 
-    if (FAILED(InitDevice()))
-    {
+    // Change cwd to the one, which contains shaders
+    std::wstring dir;
+    dir.resize(MAX_LOADSTRING + 1);
+    GetCurrentDirectory(MAX_LOADSTRING + 1, &dir[0]);
+    size_t configPos = dir.find(L"x64");
+
+    if (configPos != std::wstring::npos) {
+        dir.resize(configPos);
+        dir += L"Task1";
+        SetCurrentDirectory(dir.c_str());
+    }
+
+    if (FAILED(InitDevice())) {
         CleanupDevice();
         return 0;
     }
@@ -340,7 +352,7 @@ HRESULT InitDevice()
 
     // Compile the vertex shader
     ID3DBlob* pVSBlob = nullptr;
-    hr = CompileShaderFromFile(L"Task1.fx", "VS", "vs_4_0", &pVSBlob);
+    hr = CompileShaderFromFile(L"Task1_VS.hlsl", "main", "vs_5_0", &pVSBlob);
     if (FAILED(hr))
     {
         MessageBox(nullptr,
@@ -376,7 +388,7 @@ HRESULT InitDevice()
 
     // Compile the pixel shader
     ID3DBlob* pPSBlob = nullptr;
-    hr = CompileShaderFromFile(L"Task1.fx", "PS", "ps_4_0", &pPSBlob);
+    hr = CompileShaderFromFile(L"Task1_PS.hlsl", "main", "ps_5_0", &pPSBlob);
     if (FAILED(hr))
     {
         MessageBox(nullptr,
